@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intercepted Transmission</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            background-color: #000000;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        .terminal-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        label {
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+        input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #00ff00;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 24px;
+            text-align: center;
+            padding: 5px;
+            width: 100%;
+            max-width: 300px;
+            outline: none;
+            letter-spacing: 3px;
+        }
+        .error-msg {
+            color: #ff0000;
+            font-size: 12px;
+            height: 15px;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .secret-content {
+            display: none;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            text-align: center;
+        }
+        @media (max-width: 480px) {
+            input { font-size: 20px; }
+            .secret-content { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Passcode Screen -->
+    <div id="authGroup" class="terminal-input-group">
+        <label for="passcode">ENTER OVERRIDE CODE</label>
+        <input type="password" id="passcode" autocomplete="off" autofocus>
+        <div id="error" class="error-msg"></div>
+    </div>
+
+    <!-- Decrypted Screen -->
+    <div id="secretContent" class="secret-content"></div>
+</div>
+
+<script>
+    const input = document.getElementById('passcode');
+    const authGroup = document.getElementById('authGroup');
+    const secretContent = document.getElementById('secretContent');
+    const errorDiv = document.getElementById('error');
+
+    const targetText = "4.30pm Gordon's Wine Bar";
+    let index = 0;
+
+    // Listen for Enter key
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            validate();
+        }
+    });
+
+    function validate() {
+        // Case-insensitive check
+        if (input.value.trim().toLowerCase() === 'leonard') {
+            authGroup.style.display = 'none';
+            secretContent.style.display = 'block';
+            typeWriter();
+        } else {
+            errorDiv.textContent = "ACCESS DENIED. INVALID PASSCODE.";
+            input.value = '';
+            // Clear error after 2 seconds
+            setTimeout(() => { errorDiv.textContent = ''; }, 2000);
+        }
+    }
+
+    function typeWriter() {
+        if (index < targetText.length) {
+            secretContent.textContent += targetText.charAt(index);
+            index++;
+            setTimeout(typeWriter, 100); // Speed of typewriter effect
+        }
+    }
+</script>
+
+</body>
+</html>
